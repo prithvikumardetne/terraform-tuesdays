@@ -1,0 +1,32 @@
+name: Global workflow to rule workflow
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - '.github/workflows/**'
+      - 'single-repo.yaml'
+      #- 'CONTRIBUTING.md'
+  workflow_dispatch:
+    inputs:
+      repo_name:
+        description: |
+          gitpractice
+        required: false
+
+jobs:
+
+  replicate_coc:
+      name: Replicate Code of Conduct in all repositories
+      runs-on: ubuntu-latest
+      steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Replicating file
+        uses: derberg/manage-files-in-multiple-repositories@v2
+        with:
+          github_token: ${{ secrets.MANAGE_FILES_TOKEN }}
+          patterns_to_include: single-repo.yaml
+          committer_username: prithvikumar.detne@gmail.com
+          committer_email: prithvikumar.detne@gmail.com
+          commit_message: "Single Repo Commit"
